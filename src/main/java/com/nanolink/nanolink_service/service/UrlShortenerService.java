@@ -26,10 +26,6 @@ public class UrlShortenerService {
             shortUrl = UUID.randomUUID().toString();
         } while (urlRepository.findByShortUrl(shortUrl).isPresent());
 
-
-        String shortUrl2 = Base62Encoder.encode();
-
-
         UrlResponseDTO newUrlDTO = new UrlResponseDTO(shortUrl);
         Url newUrl = new Url(urlRequestDTO.originalURL(), newUrlDTO.shortUrl());
         urlRepository.save(newUrl);
