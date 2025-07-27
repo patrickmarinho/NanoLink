@@ -1,6 +1,8 @@
 package com.nanolink.nanolink_service.controller;
 
 import com.nanolink.nanolink_service.dto.UrlRequestDTO;
+import com.nanolink.nanolink_service.dto.UrlResponseDTO;
+import com.nanolink.nanolink_service.model.Url;
 import com.nanolink.nanolink_service.service.UrlShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,20 +18,20 @@ public class UrlController {
 
     @Autowired
     private UrlShortenerService service;
-    @Autowired
-    private UrlShortenerService urlShortenerService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/shorten")
-    public String shortenUrl(@RequestBody UrlRequestDTO urlRequestDTO) {
-
+    public ResponseEntity<UrlResponseDTO> shortenUrl(@RequestBody UrlRequestDTO urlRequestDTO) {
         String url = service.shortenUrl(urlRequestDTO);
 
-        return "shorted url: " + url;
+        UrlResponseDTO response = new UrlResponseDTO(url);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> redirectUrl(@PathVariable String shortUrl) {
-        return urlShortenerService.getOriginalUrl(shortUrl).map(originalUrl -> {
+        return service.getOriginalUrl(shortUrl).map(originalUrl -> {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(originalUrl));
 
