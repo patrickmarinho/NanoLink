@@ -7,7 +7,9 @@ import com.nanolink.nanolink_service.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -21,16 +23,27 @@ public class UrlShortenerService {
     }
 
     public String shortenUrl(UrlRequestDTO urlRequestDTO) {
+
         String shortUrl;
-        long i = 1;
         do {
-            shortUrl = Base62Encoder.encode(i);
-            i++;
+            shortUrl = generateCode();
         } while (urlRepository.findByShortUrl(shortUrl).isPresent());
 
         UrlResponseDTO newUrlDTO = new UrlResponseDTO(shortUrl);
         Url newUrl = new Url(urlRequestDTO.originalURL(), newUrlDTO.shortUrl());
+
         urlRepository.save(newUrl);
         return newUrlDTO.shortUrl();
+    }
+    private String generateCode() {
+        final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        final Random random = new SecureRandom();
+        final StringBuilder sb = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+
+        return sb.toString();
     }
 }
