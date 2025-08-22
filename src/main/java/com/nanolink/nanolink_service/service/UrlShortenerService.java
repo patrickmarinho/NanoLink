@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class UrlShortenerService {
@@ -35,6 +34,7 @@ public class UrlShortenerService {
         urlRepository.save(newUrl);
         return newUrlDTO.shortUrl();
     }
+
     private String generateCode() {
         final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         final Random random = new SecureRandom();

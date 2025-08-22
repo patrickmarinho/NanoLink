@@ -2,7 +2,6 @@ package com.nanolink.nanolink_service.controller;
 
 import com.nanolink.nanolink_service.dto.UrlRequestDTO;
 import com.nanolink.nanolink_service.dto.UrlResponseDTO;
-import com.nanolink.nanolink_service.model.Url;
 import com.nanolink.nanolink_service.service.UrlShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
