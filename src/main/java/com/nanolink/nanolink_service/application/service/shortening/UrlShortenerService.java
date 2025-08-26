@@ -25,7 +25,7 @@ public class UrlShortenerService {
         return urlRepository.save(newUrl);
     }
 
-    public Optional<String> redirect(String shortUrl) {
+    public Optional<String> getOriginalUrl(String shortUrl) {
         return urlRepository.findByShortUrl(shortUrl).map(Url::getOriginalUrl);
     }
 }

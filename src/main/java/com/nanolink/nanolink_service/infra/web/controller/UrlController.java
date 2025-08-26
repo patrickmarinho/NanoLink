@@ -41,7 +41,7 @@ public class UrlController {
 
     @GetMapping("/s/{shortUrl}")
     public ResponseEntity<Void> redirectUrl(@PathVariable String shortUrl) {
-        return shortenerService.redirect(shortUrl)
+        return shortenerService.getOriginalUrl(shortUrl)
                 .map(originalUrl -> {
                     HttpHeaders headers = new HttpHeaders();
                     headers.setLocation(URI.create(originalUrl));
