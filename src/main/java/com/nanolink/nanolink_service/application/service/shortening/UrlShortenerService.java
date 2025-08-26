@@ -10,22 +10,22 @@ import java.util.Optional;
 public class UrlShortenerService {
 
     private final UrlRepository urlRepository;
-    private final Base62RandomIdGeneratorService base62RandomIdGeneratorService;
+    private final IdGeneratorService idGeneratorService;
 
-    public UrlShortenerService(UrlRepository urlRepository, Base62RandomIdGeneratorService base62RandomIdGeneratorService) {
+    public UrlShortenerService(UrlRepository urlRepository, IdGeneratorService idGeneratorService) {
         this.urlRepository = urlRepository;
-        this.base62RandomIdGeneratorService = base62RandomIdGeneratorService;
-    }
-
-    public Optional<String> getOriginalUrl(String shortUrl) {
-        return urlRepository.findByShortUrl(shortUrl).map(Url::getOriginalUrl);
+        this.idGeneratorService = idGeneratorService;
     }
 
     public Url shorten(String originalUrl) {
-        String shortCode = base62RandomIdGeneratorService.generate();
+        String shortCode = idGeneratorService.generate();
 
         Url newUrl = new Url(originalUrl, shortCode);
 
         return urlRepository.save(newUrl);
+    }
+
+    public Optional<String> redirect(String shortUrl) {
+        return urlRepository.findByShortUrl(shortUrl).map(Url::getOriginalUrl);
     }
 }
