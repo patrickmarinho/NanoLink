@@ -1,6 +1,6 @@
-package com.nanolink.nanolink_service.repository;
+package com.nanolink.nanolink_service.domain.repository;
 
-import com.nanolink.nanolink_service.model.Url;
+import com.nanolink.nanolink_service.domain.model.Url;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

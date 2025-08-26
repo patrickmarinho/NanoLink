@@ -1,4 +1,4 @@
-package com.nanolink.nanolink_service.model;
+package com.nanolink.nanolink_service.domain.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,6 +13,7 @@ public class Url {
     private String originalUrl;
     private String shortUrl;
     private LocalDateTime createdAt;
+    private Long numberOfClicks;
 
     public Url(String originalUrl, String shortUrl) {
         this.originalUrl = originalUrl;
@@ -42,5 +43,12 @@ public class Url {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getNumberOfClicks() {
+        return numberOfClicks; }
+
+    public void setNumberOfClicks(Long numberOfClicks) {
+        this.numberOfClicks = numberOfClicks;
     }
 }
