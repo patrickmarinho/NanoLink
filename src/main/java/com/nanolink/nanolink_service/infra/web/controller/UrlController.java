@@ -49,4 +49,11 @@ public class UrlController {
                     return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
                 }).orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/s/stats/{shortUrl}")
+    public ResponseEntity<Long> getUrlStatistics(@PathVariable String shortUrl){
+        return shortenerService.getUrlClickCount(shortUrl)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
