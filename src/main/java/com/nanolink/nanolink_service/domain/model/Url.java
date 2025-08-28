@@ -19,6 +19,7 @@ public class Url {
         this.originalUrl = originalUrl;
         this.shortUrl = shortUrl;
         this.createdAt = LocalDateTime.now();
+        this.numberOfClicks = 0L;
     }
 
     public String getOriginalUrl() {

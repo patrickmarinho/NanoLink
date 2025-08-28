@@ -34,7 +34,7 @@ public class UrlShortenerService {
         });
     }
 
-    public Optional<Long> getUrlClickCount(String shortUrl){
+    public Optional<Long> getUrlClickCount(String shortUrl) {
         return urlRepository.findByShortUrl(shortUrl).map(Url::getNumberOfClicks);
     }
 }

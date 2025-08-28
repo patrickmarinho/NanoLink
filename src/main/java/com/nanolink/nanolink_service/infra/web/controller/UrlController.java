@@ -51,7 +51,7 @@ public class UrlController {
     }
 
     @GetMapping("/s/stats/{shortUrl}")
-    public ResponseEntity<Long> getUrlStatistics(@PathVariable String shortUrl){
+    public ResponseEntity<Long> getUrlStatistics(@PathVariable String shortUrl) {
         return shortenerService.getUrlClickCount(shortUrl)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
