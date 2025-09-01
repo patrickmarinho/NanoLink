@@ -4,8 +4,6 @@ import com.nanolink.nanolink_service.application.service.shortening.UrlShortener
 import com.nanolink.nanolink_service.domain.model.Url;
 import com.nanolink.nanolink_service.infra.web.dto.UrlRequestDTO;
 import com.nanolink.nanolink_service.infra.web.dto.UrlResponseDTO;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,46 +11,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController()
-@RequestMapping("/v1/nanolink")
+@RequestMapping("/v1/urls")
 public class UrlController {
+    private final UrlShortenerService urlShortenerService;
 
-    private final UrlShortenerService shortenerService;
-
-    public UrlController(UrlShortenerService service) {
-        this.shortenerService = service;
+    public UrlController(UrlShortenerService urlShortenerService) {
+        this.urlShortenerService = urlShortenerService;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping("/shorten")
-    public ResponseEntity<UrlResponseDTO> shortenUrl(@RequestBody UrlRequestDTO request) {
-        String originalUrl = request.originalURL();
-        Url domainUrl = shortenerService.shorten(originalUrl);
-
+    @PostMapping
+    public ResponseEntity<UrlResponseDTO> shortenUrl(@RequestBody UrlRequestDTO urlRequestDTO) {
+        String originalUrl = urlRequestDTO.originalURL();
+        Url domainUrl = urlShortenerService.shorten(originalUrl);
         String redirectUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/s/{originalUrl}")
+                .path("/{originalUrl}")
                 .buildAndExpand(domainUrl.getShortUrl())
                 .toUriString();
-
         UrlResponseDTO response = new UrlResponseDTO(redirectUrl);
         URI location = URI.create(redirectUrl);
-
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/s/{shortUrl}")
-    public ResponseEntity<Void> redirectUrl(@PathVariable String shortUrl) {
-        return shortenerService.getOriginalUrl(shortUrl)
-                .map(originalUrl -> {
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setLocation(URI.create(originalUrl));
-
-                    return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
-                }).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/s/stats/{shortUrl}")
+    @GetMapping("/{shortUrl}/stats")
     public ResponseEntity<Long> getUrlStatistics(@PathVariable String shortUrl) {
-        return shortenerService.getUrlClickCount(shortUrl)
+        return urlShortenerService.getUrlClickCount(shortUrl)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
